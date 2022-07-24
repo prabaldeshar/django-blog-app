@@ -3,6 +3,9 @@
 {% block content %}
 
 {% for blog in page_obj %}
+<center>
+
+
 <div class="card justify-content-center" style="width: 30rem;">
   <img src={{blog.blog_image_url}} class="card-img-top" alt="..." height="200px">
   <div class="card-body">
@@ -20,6 +23,7 @@
  
 </div>
 <br>
+</center>
 {% endfor %}
 
 <nav aria-label="Page navigation example">

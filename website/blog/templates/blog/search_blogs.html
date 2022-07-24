@@ -1,0 +1,33 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<center>
+    <h1>You Searched For...</h1>
+    {% if searched %}\
+    <h1>You searched for <i>{{searched}}</i></h1>
+    {% endif %}
+
+    {% for blog in blogs %}
+    <div class="card justify-content-center" style="width: 30rem;">
+        <img src={{blog.blog_image_url}} class="card-img-top" alt="..." height="200px">
+        <div class="card-body">
+            <a href="{% url 'detail' blog.id %}">
+                {{ meeting.title }}
+                <h5 class="card-title">{{blog.title}}</h5>
+            </a>
+            <p class="card-text">{{blog.description|truncatechars:200}}</p>
+            <img class="rounded-circle" alt="100x100" src={{blog.author_image_url}} data-holder-rendered="true"
+                height="50px" widhth="60px">
+            <p class="card-text">{{blog.author_name}}</p>
+            <p class="card-text">{{blog.author_designation}}</p>
+
+
+        </div>
+
+    </div>
+    <br>
+    {% endfor %}
+</center>
+
+
+{% endblock %}

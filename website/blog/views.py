@@ -17,6 +17,14 @@ def detail(request, blog_id):
     # return render(request, "meetings/detail.html", {"meeting": meeting})
     return render(request, "blog/detail.html", {"blog": blog})
 
+def search_blogs(request):
+    if request.method == "POST":
+        searched = request.POST['searched']
+        blogs = Blog.objects.filter(title__contains=searched)
+        return render(request, "blog/search_blogs.html", {"searched": searched, "blogs": blogs})
+    else:
+        return render(request, "blog/search_blogs.html")
+
 def add_blogs_to_db(request):
     blogs = retrive_blogs_from_website()
     for blog in blogs:
