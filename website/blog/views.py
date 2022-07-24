@@ -1,12 +1,16 @@
 from typing import List
 from django.http import HttpResponse
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Blog
 from utils import web_scrape
 # Create your views here.
 def blogs(request):
     blogs = Blog.objects.all()
-    return render(request, "blog/blogs.html", {"blogs": blogs})
+    paginator = Paginator(blogs, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, "blog/blogs.html", {"blogs": blogs, "page_obj": page_obj})
 
 def detail(request, blog_id):
     blog = get_object_or_404(Blog, pk=blog_id)

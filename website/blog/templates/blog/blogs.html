@@ -2,23 +2,46 @@
 
 {% block content %}
 
-{% for blog in blogs %}
-<div class="card" style="width: 18rem;">
+{% for blog in page_obj %}
+<div class="card justify-content-center" style="width: 30rem;">
   <img src={{blog.blog_image_url}} class="card-img-top" alt="..." height="200px">
   <div class="card-body">
     <a href="{% url 'detail' blog.id %}">
       {{ meeting.title }}
     <h5 class="card-title">{{blog.title}}</h5>
     </a>
-    <p class="card-text">{{blog.description}}</p>
+    <p class="card-text">{{blog.description|truncatechars:200}}</p>
     <img class="rounded-circle" alt="100x100" src={{blog.author_image_url}} data-holder-rendered="true" height="50px" widhth="60px">
     <p class="card-text">{{blog.author_name}}</p>
     <p class="card-text">{{blog.author_designation}}</p>
 
   
   </div>
+ 
 </div>
+<br>
 {% endfor %}
+
+<nav aria-label="Page navigation example">
+  <span class="step-links">
+      {% if page_obj.has_previous %}
+      <ul class="pagination">
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+      </ul>
+          
+      {% endif %}
+
+      <span class="current">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+      </span>
+
+      {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}">next</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+      {% endif %}
+  </span>
+</nav>
 
 {% endblock %}
       
