@@ -1,0 +1,24 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+
+{% for blog in blogs %}
+<div class="card" style="width: 18rem;">
+  <img src={{blog.blog_image_url}} class="card-img-top" alt="..." height="200px">
+  <div class="card-body">
+    <a href="{% url 'detail' blog.id %}">
+      {{ meeting.title }}
+    <h5 class="card-title">{{blog.title}}</h5>
+    </a>
+    <p class="card-text">{{blog.description}}</p>
+    <img class="rounded-circle" alt="100x100" src={{blog.author_image_url}} data-holder-rendered="true" height="50px" widhth="60px">
+    <p class="card-text">{{blog.author_name}}</p>
+    <p class="card-text">{{blog.author_designation}}</p>
+
+  
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}
+      

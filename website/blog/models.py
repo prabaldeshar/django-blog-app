@@ -10,3 +10,6 @@ class Blog(models.Model):
     author_designation = models.CharField(max_length=100)
     author_image_url = models.URLField()
 
+    def __str__(self):
+        return self.title
+
