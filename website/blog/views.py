@@ -1,5 +1,8 @@
-from django.shortcuts import get_object_or_404, render
+from typing import List
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from .models import Blog
+from utils import web_scrape
 # Create your views here.
 def blogs(request):
     blogs = Blog.objects.all()
@@ -11,5 +14,25 @@ def detail(request, blog_id):
     return render(request, "blog/detail.html", {"blog": blog})
 
 def add_blogs_to_db(request):
-    pass
+    blogs = retrive_blogs_from_website()
+    for blog in blogs:
+        # breakpoint()
+        if Blog.objects.filter(title=blog["title"]).exists() != True:
+            if blog["reading_time"] != "" and blog["reading_time"] != int:
+                reading_time = int(blog["reading_time"].split()[0])
+            else:
+                reading_time = 0
+            b = Blog(title=blog["title"], blog_image_url=blog["blog_image_url"], description=blog["description"], author_name=blog["author_name"], author_designation=blog["author_designation"], author_image_url=blog["author_image_url"], reading_time=reading_time)
+            b.save()
+        else:
+            print("The Blog with the same title already exists in the database")
+
+    return redirect("blogs")
+
+def retrive_blogs_from_website():
+    print("Retrive all blogs function called")
+    all_blogs = web_scrape.main()
+    return all_blogs
+
+
 
