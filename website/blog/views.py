@@ -9,12 +9,13 @@ from utils import web_scrape
 # Create your views here.
 def blogs(request):
     blogs = Blog.objects.all()
-    paginator = Paginator(blogs, 5)
+    # assert Blog.objects.all().ordered == True
+    paginator = Paginator(blogs, 4)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, "blog/blogs.html", {"blogs": blogs, "page_obj": page_obj})
 
-def detail(request, blog_id):
+def detail(request, blog_id: int):
     blog = get_object_or_404(Blog, pk=blog_id)
     # return render(request, "meetings/detail.html", {"meeting": meeting})
     return render(request, "blog/detail.html", {"blog": blog})
@@ -32,7 +33,7 @@ def add_blogs_to_db(request):
     for blog in blogs:
         # breakpoint()
         if Blog.objects.filter(title=blog["title"]).exists() != True:
-            if blog["reading_time"] != "" and blog["reading_time"] != int:
+            if blog["reading_time"] != "" and type(blog["reading_time"]) != int:
                 reading_time = int(blog["reading_time"].split()[0])
             else:
                 reading_time = 0
@@ -59,3 +60,6 @@ def update_blog(request, blog_id: int):
         return redirect('detail', blog_id=blog_id)
     return render(request, "blog/update_blog.html", {"blog_form": blog_form})
 
+def delete_all_blog(request):
+    Blog.objects.all().delete()
+    return redirect('blogs')

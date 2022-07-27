@@ -2,11 +2,13 @@
 {% block content %}
 <center>
     <h1> Update Post </h1>
+    <table>
     <form method="POST">
         {% csrf_token %}
         {{blog_form.as_p}}
-        <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit" class="btn-dark">Update Blog</button>
+        <button class="btn btn-primary my-2 my-sm-0" type="submit" >Update Blog</button>
       </form>
+    </table>
 </center>
     
 {% endblock %}
