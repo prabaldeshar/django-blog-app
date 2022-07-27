@@ -1,8 +1,10 @@
+import re
 from typing import List
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Blog
+from .forms import BlogUpdateForm
 from utils import web_scrape
 # Create your views here.
 def blogs(request):
@@ -46,5 +48,14 @@ def retrive_blogs_from_website():
     all_blogs = web_scrape.main()
     return all_blogs
 
-
+def update_blog(request, blog_id: int):
+    if request.method == "GET":
+        blog = Blog.objects.get(pk=blog_id)
+        blog_form = BlogUpdateForm(initial={"description": blog.description, "title": blog.title})
+    else:
+        blog = Blog.objects.get(pk=blog_id)
+        f = BlogUpdateForm(request.POST, instance=blog)
+        f.save()
+        return redirect('detail', blog_id=blog_id)
+    return render(request, "blog/update_blog.html", {"blog_form": blog_form})
 
