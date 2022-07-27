@@ -3,10 +3,9 @@ version: '3.8'
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - ./app/:/usr/src/app/
     ports:
       - 8000:8000
-    env_file:
-      - ./.env.dev
+    environment:
+      - DJANGO_SECRET_KEY=secret
+      - CHROMEDRIVER_PATH=/chromedriver/chromedriver
+ 

@@ -1,11 +1,13 @@
-import time
-import itertools
-from typing import List
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
+
+import time
+import itertools
+from typing import List
+import os
 
 ## Setup chrome options
 chrome_options = Options()
@@ -16,7 +18,7 @@ chrome_options.add_argument("--no-sandbox")
 # webdriver_service = Service(f"/home/prabal/python/web-scraping/chromedriver/stable/chromedriver")
 
 # Set path to chromedriver as per your configuration
-webdriver_service = Service(f"/home/prabal/python/web-scraping/chromedriver/stable/chromedriver")
+webdriver_service = Service(os.environ.get("CHROMEDRIVER_PATH"))
 
 # Choose Chrome Browser
 driver = webdriver.Chrome(service=webdriver_service, options=chrome_options)
