@@ -37,7 +37,7 @@ def scroll_down(driver):
         # Scroll down to the bottom. 
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         # Wait to load the page.
-        time.sleep(3)
+        time.sleep(2.76)
         # Calculate new scroll height and compare with last scroll height.
         new_height = driver.execute_script("return document.body.scrollHeight")
         if new_height == last_height:
@@ -143,7 +143,8 @@ def get_all_blog_details(all_blog_links: List):
         blog_details["author_name"], blog_details["author_designation"], blog_details["author_image_url"] = author_name, author_designation, author_image_url
         
         all_blog_details.append(blog_details)
-    
+
+    driver.close()   
     return all_blog_details
 
 def write_json(input):
