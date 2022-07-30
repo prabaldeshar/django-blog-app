@@ -29,6 +29,7 @@ RUN unzip $CHROMEDRIVER_DIR/chromedriver* -d $CHROMEDRIVER_DIR
 RUN apt update
 RUN apt-get install libgconf-2-4 -y
 
+RUN pip install fake-useragent
 # copy project
 COPY . .
 

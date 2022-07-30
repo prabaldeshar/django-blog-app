@@ -30,6 +30,8 @@ def search_blogs(request):
 
 def add_blogs_to_db(request):
     blogs = retrive_blogs_from_website()
+    if blogs == None:
+        return HttpResponse("No blogs foundx")
     for blog in blogs:
         # breakpoint()
         if Blog.objects.filter(title=blog["title"]).exists() != True:

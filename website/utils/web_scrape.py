@@ -2,7 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
+from fake_useragent import UserAgent
 
 import time
 import itertools
@@ -10,23 +11,14 @@ from typing import List
 import os
 
 ## Setup chrome options
-chrome_options = Options()
-chrome_options.add_argument("--headless") # Ensure GUI is off
-chrome_options.add_argument("--no-sandbox")
+    
+
 
 # Set path to chromedriver as per your configuration
 # webdriver_service = Service(f"/home/prabal/python/web-scraping/chromedriver/stable/chromedriver")
 
 # Set path to chromedriver as per your configuration
 webdriver_service = Service(os.environ.get("CHROMEDRIVER_PATH"))
-
-# Choose Chrome Browser
-driver = webdriver.Chrome(service=webdriver_service, options=chrome_options)
-# Choose Chrome Browser
-driver = webdriver.Chrome(service=webdriver_service, options=chrome_options)
-URL = "https://proshore.eu/resources/"
-
-
 
 def scroll_down(driver):
     """A method for scrolling the page."""
@@ -120,17 +112,36 @@ def get_element_by_class_name_from_driver(driver, class_name):
         element = None
     
     return element
+def get_new_driver():
+    chrome_options = Options()
+    ua = UserAgent()
+    chrome_options.add_argument("--headless") # Ensure GUI is off
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument('--disable-dev-shm-usage')    
+    user_agent = ua.random
+    print(user_agent)
+    chrome_options.add_argument(f'user-agent={user_agent}')
+    try:
+        driver = webdriver.Chrome(chrome_options=chrome_options, service=webdriver_service)
+        return driver
+    except WebDriverException:
+        print("Webdriver error")
+        return None
+    
 
 def get_all_blog_details(all_blog_links: List):
-    # breakpoint()
+    print("All blog links --->", all_blog_links)
     all_blog_details = []
     for item in all_blog_links:
         blog_details = {}
         reading_time = item["reading_time"]
         blog_details["reading_time"] = reading_time
         url = item["blog_detail_link"]
-        driver.get(url)
-        playground_container_element = get_element_by_class_name_from_driver(driver, "playground-container")
+        new_driver = get_new_driver()
+        if new_driver == None:
+            continue
+        new_driver.get(url)
+        playground_container_element = get_element_by_class_name_from_driver(new_driver, "playground-container") 
         if playground_container_element == None:
             print("No element found")
             continue
@@ -143,8 +154,7 @@ def get_all_blog_details(all_blog_links: List):
         blog_details["author_name"], blog_details["author_designation"], blog_details["author_image_url"] = author_name, author_designation, author_image_url
         
         all_blog_details.append(blog_details)
-
-    driver.close()   
+        new_driver.close()
     return all_blog_details
 
 def write_json(input):
@@ -155,8 +165,11 @@ def main():
     #Set URL
     URL = "https://proshore.eu/resources/"
     # Get page
-    driver.get(URL)
-    scrolled_down_driver = scroll_down(driver)
+    new_driver = get_new_driver()
+    if new_driver == None:
+        return None
+    new_driver.get(URL)
+    scrolled_down_driver = scroll_down(new_driver)
     all_elements = find_elements_by_class_name(scrolled_down_driver, "playground-item")
     # breakpoint()
     blog_links_list = get_blog_details_link_from_elements(all_elements)
